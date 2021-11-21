@@ -1,0 +1,31 @@
+name: tweet
+on:
+  schedule:
+    - cron: '0 10,22 * * *'
+  push:
+    branches:
+      - main
+jobs:
+  get-image:
+    runs-on: ubuntu-20.04
+    services:
+      selenium:
+        image: selenium/standalone-firefox:4.1.0-prerelease-20211105
+        ports:
+          - 4444:4444
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up ruby
+        uses: ruby/setup-ruby@477b21f02be01bcb8030d50f37cfec92bfa615b6
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+          working-directory: ./src
+      - name: get image
+        env:
+          TWITTER_CONSUMER_TOKEN: ${{ secrets.TWITTER_CONSUMER_TOKEN }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        run: bundle exec ruby getimage.rb ${{ steps.date.outputs.date }}
+        working-directory: ./src
