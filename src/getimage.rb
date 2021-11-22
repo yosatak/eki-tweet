@@ -11,8 +11,10 @@ File.open("../data/station-coord"){|f|
 answer = data[rand(data.count - 1)].chomp.split(' ')
 
 
-session = Selenium::WebDriver.for(:remote,
-                                 :url => "http://localhost:4444/")
+session = Selenium::WebDriver.for(
+  :remote,
+  :url => "http://localhost:4444/"
+)
 session.manage.timeouts.implicit_wait = 20
 
 session.navigate.to("https://maps.gsi.go.jp/#15/#{answer[2]}/#{answer[1]}/&ls=experimental_rdcl%7Cexperimental_railcl%7Cexperimental_rvrcl&disp=111")
